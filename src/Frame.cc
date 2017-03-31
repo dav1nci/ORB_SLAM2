@@ -207,6 +207,7 @@ Frame::Frame(const cv::Mat &imGray, const double &timeStamp, ORBextractor* extra
     // This is done only for the first Frame (or after a change in the calibration)
     if(mbInitialComputations)
     {
+        cout << "Frame(), This is done only for the first Frame (or after a change in the calibration)" << endl;
         ComputeImageBounds(imGray);
 
         mfGridElementWidthInv=static_cast<float>(FRAME_GRID_COLS)/static_cast<float>(mnMaxX-mnMinX);
@@ -229,6 +230,7 @@ Frame::Frame(const cv::Mat &imGray, const double &timeStamp, ORBextractor* extra
 
 void Frame::AssignFeaturesToGrid()
 {
+    cout << "AssignFeaturesToGrid(), started" << endl;
     int nReserve = 0.5f*N/(FRAME_GRID_COLS*FRAME_GRID_ROWS);
     for(unsigned int i=0; i<FRAME_GRID_COLS;i++)
         for (unsigned int j=0; j<FRAME_GRID_ROWS;j++)
@@ -405,6 +407,7 @@ void Frame::UndistortKeyPoints()
 {
     if(mDistCoef.at<float>(0)==0.0)
     {
+        cout << "UndistortKeyPoints() return cause mDistCoef.at<float>(0)==0.0" << endl;
         mvKeysUn=mvKeys;
         return;
     }

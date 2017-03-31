@@ -254,10 +254,14 @@ cv::Mat Tracking::GrabImageMonocular(const cv::Mat &im, const double &timestamp)
             cvtColor(mImGray,mImGray,CV_BGRA2GRAY);
     }
 
-    if(mState==NOT_INITIALIZED || mState==NO_IMAGES_YET)
-        mCurrentFrame = Frame(mImGray,timestamp,mpIniORBextractor,mpORBVocabulary,mK,mDistCoef,mbf,mThDepth);
-    else
-        mCurrentFrame = Frame(mImGray,timestamp,mpORBextractorLeft,mpORBVocabulary,mK,mDistCoef,mbf,mThDepth);
+    if(mState==NOT_INITIALIZED || mState==NO_IMAGES_YET) {
+        cout << "GrabImageMonocular(), Frame not initialized" <<  endl;
+        mCurrentFrame = Frame(mImGray, timestamp, mpIniORBextractor, mpORBVocabulary, mK, mDistCoef, mbf, mThDepth);
+    }
+    else {
+        cout << "GrabImageMonocular(), Frame initialized" << endl;
+        mCurrentFrame = Frame(mImGray, timestamp, mpORBextractorLeft, mpORBVocabulary, mK, mDistCoef, mbf, mThDepth);
+    }
 
     Track();
 
@@ -268,6 +272,7 @@ void Tracking::Track()
 {
     if(mState==NO_IMAGES_YET)
     {
+        cout << "Track(), mState==NO_IMAGES_YET" << endl;
         mState = NOT_INITIALIZED;
     }
 
@@ -278,6 +283,7 @@ void Tracking::Track()
 
     if(mState==NOT_INITIALIZED)
     {
+        cout << "Track(), state not initialized, trying to initialize" << endl;
         if(mSensor==System::STEREO || mSensor==System::RGBD)
             StereoInitialization();
         else
@@ -566,12 +572,14 @@ void Tracking::MonocularInitialization()
     if(!mpInitializer)
     {
         // Set Reference Frame
+        cout << "MonocularInitialization(), mCurrentFrame.mvKeys.size() = " << mCurrentFrame.mvKeys.size() << endl;
         if(mCurrentFrame.mvKeys.size()>100)
         {
             mInitialFrame = Frame(mCurrentFrame);
             mLastFrame = Frame(mCurrentFrame);
             mvbPrevMatched.resize(mCurrentFrame.mvKeysUn.size());
-            for(size_t i=0; i<mCurrentFrame.mvKeysUn.size(); i++)
+            cout << "MonocularInitialization(), mCurrentFrame.mvKeysUn.size() = " << mCurrentFrame.mvKeysUn.size()<< endl;
+            for(size_t i = 0; i<mCurrentFrame.mvKeysUn.size(); i++)
                 mvbPrevMatched[i]=mCurrentFrame.mvKeysUn[i].pt;
 
             if(mpInitializer)

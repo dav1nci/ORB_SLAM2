@@ -59,6 +59,7 @@
 #include <opencv2/features2d/features2d.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <vector>
+#include <iostream>
 
 #include "ORBextractor.h"
 
@@ -1046,6 +1047,7 @@ void ORBextractor::operator()( InputArray _image, InputArray _mask, vector<KeyPo
     if(_image.empty())
         return;
 
+    cout << "ExtractOrb_operator(), extracting features" << endl;
     Mat image = _image.getMat();
     assert(image.type() == CV_8UC1 );
 
@@ -1102,6 +1104,11 @@ void ORBextractor::operator()( InputArray _image, InputArray _mask, vector<KeyPo
         // And add the keypoints to the output
         _keypoints.insert(_keypoints.end(), keypoints.begin(), keypoints.end());
     }
+
+    cout << "ExtractOrb_operator(), keypoints size = " << _keypoints.size() << endl;
+    /*for (int i = 0; i < _keypoints.size(); ++i) {
+        cout << "position (" << _keypoints[i].pt.x << ", " << _keypoints[i].pt.y << ")" << endl;
+    }*/
 }
 
 void ORBextractor::ComputePyramid(cv::Mat image)
